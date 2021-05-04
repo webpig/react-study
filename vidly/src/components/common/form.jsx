@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import Joi from 'joi-browser';
 import Input from './input';
+import Select from './select';
 
 class Form extends Component {
     state = {
-        account: {},
+        data: {},
         errors: {}
     }
 
     validate = () => {
         const options = { abortEarly: false };
-        const { error } = Joi.validate(this.state.account, this.schema, options);
+        const { error } = Joi.validate(this.state.data, this.schema, options);
 
         if (!error) return null;
 
@@ -46,9 +47,9 @@ class Form extends Component {
         if (errorMessage) errors[input.name] = errorMessage;
         else delete errors[input.name];
 
-        const account = { ...this.state.account };
-        account[input.name] = input.value;
-        this.setState({ account, errors });
+        const data = { ...this.state.data };
+        data[input.name] = input.value;
+        this.setState({ data, errors });
     }
 
     renderButton(label) {
@@ -58,18 +59,33 @@ class Form extends Component {
     }
 
     renderInput(name, label, type) {
-        const { account, errors } = this.state;
+        const { data, errors } = this.state;
         
         return (
             <Input
                 type={type}
                 name={name}
-                value={account[name]}
+                value={data[name]}
                 label={label}
                 error={errors[name]}
                 onChange={this.handleChange}
             />
         );
+    }
+
+    renderSelect(name, label, options) {
+        const { data, errors } = this.state;
+
+        return (
+            <Select
+                name={name}
+                value={data[name]}
+                label={label}
+                options={options}
+                onChange={this.handleChange}
+                error={errors[name]}
+            />
+        )
     }
 }
  
